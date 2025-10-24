@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional UI Task</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#218ff4',  // Brand blue
+            secondary: '#051C41', // Deep blue for nav/footer
+            accent: '#95bdf2',    // Light blue for buttons
+            neutral: '#031226'    // For subtle text if needed
+          },
+          fontFamily: {
+            sans: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-white text-primary font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-secondary text-white shadow-md fixed w-full z-10">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="#" class="font-bold text-2xl">MyBrand</a>
+      <div class="hidden md:flex space-x-6" id="menu">
+        <a href="#home" class="hover:text-accent">Home</a>
+        <a href="#services" class="hover:text-accent">Services</a>
+        <a href="#contact" class="hover:text-accent">Contact</a>
+      </div>
+      <button id="menu-btn" class="md:hidden text-white focus:outline-none">☰</button>
+    </div>
+    <div class="hidden bg-secondary px-6 py-4" id="mobile-menu">
+      <a href="#home" class="block py-2 hover:text-accent">Home</a>
+      <a href="#services" class="block py-2 hover:text-accent">Services</a>
+      <a href="#contact" class="block py-2 hover:text-accent">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="py-32 text-center">
+    <div class="container mx-auto px-6">
+      <h1 class="text-5xl font-bold mb-4">Build Your Brand Professionally</h1>
+      <p class="text-lg mb-6">We deliver modern websites and interfaces that align with your brand.</p>
+
+      <!-- Click Counter Button -->
+      <div class="mb-6">
+        <p class="mb-2">Clicks: <span id="counter" class="font-bold">0</span></p>
+        <button id="counter-btn" class="px-6 py-3 bg-accent text-white rounded-lg hover:bg-primary hover:text-white transition">
+          Click Me
+        </button>
+      </div>
+
+      <!-- CTA Button -->
+      <button id="cta-btn" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-accent hover:text-white transition">
+        Get Started
+      </button>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="py-20 text-center">
+    <h2 class="text-4xl font-bold mb-12">Our Services</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
+      <div class="p-6 rounded-lg shadow hover:shadow-lg transition border border-gray-200">
+        <h3 class="text-2xl font-semibold mb-4">Web Design</h3>
+        <p>Modern, responsive designs that reflect your brand identity.</p>
+      </div>
+      <div class="p-6 rounded-lg shadow hover:shadow-lg transition border border-gray-200">
+        <h3 class="text-2xl font-semibold mb-4">UI/UX Design</h3>
+        <p>User-friendly interfaces to improve engagement and retention.</p>
+      </div>
+      <div class="p-6 rounded-lg shadow hover:shadow-lg transition border border-gray-200">
+        <h3 class="text-2xl font-semibold mb-4">Web Development</h3>
+        <p>Clean, scalable code powering fast and reliable web apps.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call-to-Action Section -->
+  <section id="contact" class="py-20 text-center">
+    <h2 class="text-4xl font-bold mb-6">Ready to Start?</h2>
+    <p class="mb-6">Contact us and let’s create something amazing together.</p>
+    <button id="contact-btn" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-accent transition">
+      Contact Us
+    </button>
+
+    <!-- Modal Form -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden">
+      <div class="bg-white text-primary p-8 rounded-lg w-11/12 max-w-md relative">
+        <h3 class="text-2xl font-bold mb-4">Contact Form</h3>
+        <form id="contact-form" class="flex flex-col gap-4">
+          <input type="text" placeholder="Your Name" class="p-3 border border-gray-300 rounded" required>
+          <input type="email" placeholder="Your Email" class="p-3 border border-gray-300 rounded" required>
+          <textarea placeholder="Your Message" class="p-3 border border-gray-300 rounded" rows="4" required></textarea>
+          <button type="submit" class="px-6 py-3 bg-primary text-white rounded hover:bg-accent transition">Send</button>
+        </form>
+        <button id="close-modal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800">&times;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-secondary py-6 text-center text-white">
+    &copy; 2025 MyBrand. All rights reserved.
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+    // Counter button
+    let count = 0;
+    const counterBtn = document.getElementById('counter-btn');
+    const counter = document.getElementById('counter');
+    counterBtn.addEventListener('click', () => {
+      count++;
+      counter.textContent = count;
+    });
+
+    // CTA button scroll to contact
+    const ctaBtn = document.getElementById('cta-btn');
+    ctaBtn.addEventListener('click', () => {
+      document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Contact modal open/close
+    const contactBtn = document.getElementById('contact-btn');
+    const modal = document.getElementById('modal');
+    const closeModal = document.getElementById('close-modal');
+    contactBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+    closeModal.addEventListener('click', () => modal.classList.add('hidden'));
+    modal.addEventListener('click', e => { if(e.target === modal) modal.classList.add('hidden'); });
+
+    // Form submission simulation
+    const contactForm = document.getElementById('contact-form');
+    contactForm.addEventListener('submit', e => {
+      e.preventDefault();
+      alert("Thank you! We'll reach out shortly.");
+      modal.classList.add('hidden');
+      contactForm.reset();
+    });
+  </script>
+
+</body>
+</html>

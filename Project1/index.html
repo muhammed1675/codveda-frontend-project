@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Responsive Landing Page - Codveda Internship Task" />
+  <title>Responsive Landing Page</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ===== Header / Navbar ===== -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">Codveda<span>Tech</span></div>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+    </nav>
+  </header>
+
+  <!-- ===== Hero Section ===== -->
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <h1>Build Beautiful, Responsive Websites</h1>
+      <p>Empowering your digital presence with clean code and modern design.</p>
+      <a href="#features" class="btn">Explore Features</a>
+    </div>
+  </section>
+
+  <!-- ===== Features Section ===== -->
+  <section id="features" class="features">
+    <h2>Our Features</h2>
+    <div class="feature-container">
+      <div class="feature-box">
+        <h3>Fast Performance</h3>
+        <p>Optimized for speed and efficiency on all devices.</p>
+      </div>
+      <div class="feature-box">
+        <h3>Clean Design</h3>
+        <p>Modern layouts and simple, intuitive user interfaces.</p>
+      </div>
+      <div class="feature-box">
+        <h3>Responsive Layout</h3>
+        <p>Perfectly adapts to mobile, tablet, and desktop screens.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== About Section ===== -->
+  <section id="about" class="about">
+    <h2>About Us</h2>
+    <p>
+      We’re a team of passionate developers creating innovative web solutions. 
+      Our mission is to deliver excellence through design and technology.
+    </p>
+  </section>
+
+  <!-- ===== Contact Section ===== -->
+  <section id="contact" class="contact">
+    <div class="contact-wrapper">
+      <div class="contact-info">
+        <h2>Contact Us</h2>
+        <p>Have a question or want to work together? Send us a message.</p>
+        <ul>
+          <li><strong>Email:</strong> hello@codveda.com</li>
+          <li><strong>Phone:</strong> +1 (555) 123-4567</li>
+          <li><strong>Location:</strong> Remote</li>
+        </ul>
+        <div class="socials">
+          <a href="#" aria-label="Twitter">Twitter</a>
+          <a href="#" aria-label="LinkedIn">LinkedIn</a>
+        </div>
+      </div>
+
+      <form class="contact-form" id="contactForm" novalidate>
+        <label for="cname">Name</label>
+        <input type="text" id="cname" name="name" placeholder="Your name" required />
+
+        <label for="cemail">Email</label>
+        <input type="email" id="cemail" name="email" placeholder="you@example.com" required />
+
+        <label for="cmessage">Message</label>
+        <textarea id="cmessage" name="message" rows="5" placeholder="Write your message..." required></textarea>
+
+        <button type="submit" class="btn">Send Message</button>
+        <p class="form-status" id="formStatus" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="site-footer">
+    <p>© 2025 Codveda Technologies | Designed by Ayoola Muhammed Olayode</p>
+  </footer>
+
+  <!-- ===== Back to Top Button ===== -->
+  <button id="backToTop" title="Go to top">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>

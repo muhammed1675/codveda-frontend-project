@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Form Validator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background-color: #f8f9ff;
+        }
+
+        input.valid {
+            border-color: #4caf50;
+            background-color: #f1f8f4;
+        }
+
+        input.invalid {
+            border-color: #f44336;
+            background-color: #fef5f5;
+        }
+
+        .error-message {
+            display: none;
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            display: none;
+            color: #4caf50;
+            font-size: 12px;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .password-strength {
+            display: none;
+            margin-top: 8px;
+            height: 4px;
+            background-color: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .password-strength.show {
+            display: block;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-bar.weak {
+            width: 33%;
+            background-color: #f44336;
+        }
+
+        .strength-bar.medium {
+            width: 66%;
+            background-color: #ff9800;
+        }
+
+        .strength-bar.strong {
+            width: 100%;
+            background-color: #4caf50;
+        }
+
+        .strength-text {
+            font-size: 11px;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .strength-text.weak {
+            color: #f44336;
+        }
+
+        .strength-text.medium {
+            color: #ff9800;
+        }
+
+        .strength-text.strong {
+            color: #4caf50;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .success-modal.show {
+            display: flex;
+        }
+
+        .success-content {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: #4caf50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+        }
+
+        .success-content h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .success-content p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .success-details {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .success-details p {
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .success-details strong {
+            color: #333;
+        }
+
+        .close-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #764ba2;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .form-header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-header">
+            <h1>Create Account</h1>
+            <p>Please fill in all fields to get started</p>
+        </div>
+
+        <form id="validationForm" novalidate>
+            <!-- Name Field -->
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    placeholder="John Doe"
+                    required
+                >
+                <div class="error-message" id="nameError"></div>
+                <div class="success-message" id="nameSuccess">✓ Name is valid</div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="john@example.com"
+                    required
+                >
+                <div class="error-message" id="emailError"></div>
+                <div class="success-message" id="emailSuccess">✓ Email is valid</div>
+            </div>
+
+            <!-- Phone Number Field -->
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    placeholder="(123) 456-7890"
+                    required
+                >
+                <div class="error-message" id="phoneError"></div>
+                <div class="success-message" id="phoneSuccess">✓ Phone number is valid</div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="Enter a strong password"
+                    required
+                >
+                <div class="password-strength" id="passwordStrength">
+                    <div class="strength-bar" id="strengthBar"></div>
+                </div>
+                <div class="strength-text" id="strengthText"></div>
+                <div class="error-message" id="passwordError"></div>
+                <div class="success-message" id="passwordSuccess">✓ Password is strong</div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Create Account</button>
+        </form>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="success-content">
+            <div class="success-icon">✓</div>
+            <h2>Success!</h2>
+            <p>Your account has been created successfully</p>
+            <div class="success-details">
+                <p><strong>Name:</strong> <span id="displayName"></span></p>
+                <p><strong>Email:</strong> <span id="displayEmail"></span></p>
+                <p><strong>Phone:</strong> <span id="displayPhone"></span></p>
+            </div>
+            <button class="close-btn" id="closeBtn">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Form and field references
+        const form = document.getElementById('validationForm');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const passwordInput = document.getElementById('password');
+        const submitBtn = document.getElementById('submitBtn');
+        const successModal = document.getElementById('successModal');
+        const closeBtn = document.getElementById('closeBtn');
+
+        // Validation rules
+        const validationRules = {
+            name: {
+                validate: (value) => value.trim().length >= 2,
+                error: 'Name must be at least 2 characters long'
+            },
+            email: {
+                validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+                error: 'Please enter a valid email address'
+            },
+            phone: {
+                validate: (value) => /^[\d\s\-$$$$\+]+$/.test(value) && value.replace(/\D/g, '').length >= 10,
+                error: 'Please enter a valid phone number (at least 10 digits)'
+            },
+            password: {
+                validate: (value) => value.length >= 8,
+                error: 'Password must be at least 8 characters long'
+            }
+        };
+
+        // Validate individual field
+        function validateField(fieldName, value) {
+            const rule = validationRules[fieldName];
+            return rule.validate(value);
+        }
+
+        // Get error message
+        function getErrorMessage(fieldName) {
+            return validationRules[fieldName].error;
+        }
+
+        // Check password strength
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            const passwordStrength = document.getElementById('passwordStrength');
+
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[!@#$%^&*]/.test(password)) strength++;
+
+            passwordStrength.classList.add('show');
+
+            if (strength <= 2) {
+                strengthBar.className = 'strength-bar weak';
+                strengthText.className = 'strength-text weak';
+                strengthText.textContent = 'Weak password';
+                return false;
+            } else if (strength <= 3) {
+                strengthBar.className = 'strength-bar medium';
+                strengthText.className = 'strength-text medium';
+                strengthText.textContent = 'Medium password';
+                return true;
+            } else {
+                strengthBar.className = 'strength-bar strong';
+                strengthText.className = 'strength-text strong';
+                strengthText.textContent = 'Strong password';
+                return true;
+            }
+        }
+
+        // Update field UI
+        function updateFieldUI(fieldName, isValid, showError = false) {
+            const input = document.getElementById(fieldName);
+            const errorElement = document.getElementById(`${fieldName}Error`);
+            const successElement = document.getElementById(`${fieldName}Success`);
+
+            if (isValid) {
+                input.classList.remove('invalid');
+                input.classList.add('valid');
+                errorElement.classList.remove('show');
+                successElement.classList.add('show');
+            } else {
+                input.classList.remove('valid');
+                if (showError) {
+                    input.classList.add('invalid');
+                    errorElement.textContent = getErrorMessage(fieldName);
+                    errorElement.classList.add('show');
+                    successElement.classList.remove('show');
+                } else {
+                    input.classList.remove('invalid');
+                    errorElement.classList.remove('show');
+                    successElement.classList.remove('show');
+                }
+            }
+        }
+
+        // Handle input event (real-time validation)
+        function handleInput(event) {
+            const fieldName = event.target.name;
+            const value = event.target.value;
+
+            if (fieldName === 'password') {
+                if (value.length > 0) {
+                    const isStrong = checkPasswordStrength(value);
+                    const isValid = validateField(fieldName, value) && isStrong;
+                    updateFieldUI(fieldName, isValid, false);
+                } else {
+                    document.getElementById('passwordStrength').classList.remove('show');
+                    updateFieldUI(fieldName, false, false);
+                }
+            } else {
+                const isValid = validateField(fieldName, value);
+                updateFieldUI(fieldName, isValid, false);
+            }
+        }
+
+        // Handle blur event (show errors on blur)
+        function handleBlur(event) {
+            const fieldName = event.target.name;
+            const value = event.target.value;
+
+            if (value.length > 0) {
+                const isValid = validateField(fieldName, value);
+                updateFieldUI(fieldName, isValid, !isValid);
+            }
+        }
+
+        // Validate entire form
+        function validateForm() {
+            const fields = ['name', 'email', 'phone', 'password'];
+            let isFormValid = true;
+
+            fields.forEach(fieldName => {
+                const input = document.getElementById(fieldName);
+                const value = input.value;
+                let isValid = validateField(fieldName, value);
+
+                if (fieldName === 'password') {
+                    const isStrong = checkPasswordStrength(value);
+                    isValid = isValid && isStrong;
+                }
+
+                updateFieldUI(fieldName, isValid, !isValid);
+                if (!isValid) isFormValid = false;
+            });
+
+            return isFormValid;
+        }
+
+        // Handle form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            if (validateForm()) {
+                // Show success modal
+                document.getElementById('displayName').textContent = nameInput.value;
+                document.getElementById('displayEmail').textContent = emailInput.value;
+                document.getElementById('displayPhone').textContent = phoneInput.value;
+                successModal.classList.add('show');
+
+                // Reset form
+                form.reset();
+                document.querySelectorAll('input').forEach(input => {
+                    input.classList.remove('valid', 'invalid');
+                });
+                document.getElementById('passwordStrength').classList.remove('show');
+            }
+        }
+
+        // Close modal and reload page
+        function closeModal() {
+        successModal.classList.remove('show');
+        setTimeout(() => {
+        window.location.reload();
+        }, 500); // small delay for smoother UX
+            }
+
+
+        // Add event listeners
+        nameInput.addEventListener('input', handleInput);
+        nameInput.addEventListener('blur', handleBlur);
+
+        emailInput.addEventListener('input', handleInput);
+        emailInput.addEventListener('blur', handleBlur);
+
+        phoneInput.addEventListener('input', handleInput);
+        phoneInput.addEventListener('blur', handleBlur);
+
+        passwordInput.addEventListener('input', handleInput);
+        passwordInput.addEventListener('blur', handleBlur);
+
+        form.addEventListener('submit', handleSubmit);
+        closeBtn.addEventListener('click', closeModal);
+
+        // Close modal when clicking outside
+        successModal.addEventListener('click', (event) => {
+            if (event.target === successModal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
